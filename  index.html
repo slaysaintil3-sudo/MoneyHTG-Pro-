@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MoneyHTG - Platform</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            background-color: #1e293b;
+            border-bottom: 1px solid #334155;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #38bdf8;
+            cursor: pointer;
+        }
+
+        .nav-btns .btn {
+            padding: 0.5rem 1rem;
+            margin-left: 0.3rem;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .btn-login {
+            background: transparent;
+            color: #f8fafc;
+            border: 1px solid #475569;
+        }
+
+        .btn-signup {
+            background-color: #0284c7;
+            color: #ffffff;
+        }
+
+        .hero {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 0.95rem;
+            color: #94a3b8;
+            max-width: 500px;
+            margin-bottom: 1.5rem;
+        }
+
+        .auth-container, .dashboard, .admin-panel {
+            display: none;
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid #334155;
+            width: 100%;
+            max-width: 450px;
+            text-align: left;
+            margin-bottom: 1rem;
+        }
+
+        .admin-panel {
+            border: 1px solid #ef4444;
+            text-align: center;
+        }
+
+        .admin-title {
+            color: #ef4444;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .admin-btn-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .admin-btn {
+            background-color: #334155;
+            color: #38bdf8;
+            border: 1px solid #475569;
+            padding: 0.7rem 1rem;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            flex: 1 1 40%;
+        }
+
+        .admin-btn:hover {
+            background-color: #475569;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.3rem;
+            color: #cbd5e1;
+            font-size: 0.85rem;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.6rem;
+            border-radius: 5px;
+            border: 1px solid #475569;
+            background-color: #0f172a;
+            color: #ffffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 0.7rem;
+            background-color: #38bdf8;
+            color: #0f172a;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .balance-card {
+            background-color: #0f172a;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #38bdf8;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .balance-card .amount {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #38bdf8;
+        }
+
+        /* Modal / Pop-up Style */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.8);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-body {
+            background-color: #1e293b;
+            padding: 1.5rem;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 400px;
+            border: 1px solid #38bdf8;
+            position: relative;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            color: #ef4444;
+            font-size: 1.5rem;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .admin-item {
+            background-color: #0f172a;
+            padding: 0.6rem;
+            border-radius: 5px;
+            border: 1px solid #334155;
+            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+        }
+
+        .btn-action-small {
+            background-color: #22c55e;
+            color: #0f172a;
+            padding: 0.3rem 0.6rem;
+            border: none;
+            border-radius: 4px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        footer {
+            text-align: center;
+            padding: 1rem;
+            background-color: #0f172a;
+            color: #64748b;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo" id="logo-btn">MoneyHTG</div>
+        <div class="nav-btns" id="nav-actions">
+            <button class="btn btn-login" id="nav-login-btn">Konekte</button>
+            <button class="btn btn-signup" id="nav-signup-btn">Sizyene</button>
+        </div>
+    </header>
+
+    <main class="hero">
+        <div id="home-section">
+            <h1>Byenvini sou MoneyHTG</h1>
+            <p>Platfòm ki ba w aksè ak sèvis jesyon ak kontni an dirèk. Kreye kont ou kounye a pou w kòmanse.</p>
+            <button class="btn-signup btn" style="padding: 0.8rem 1.5rem;" id="hero-signup-btn">Kòmanse Kounye a</button>
+        </div>
+
+        <!-- Koneksyon -->
+        <div id="login-box" class="auth-container">
+            <h2 style="color:#38bdf8; margin-bottom:1rem; text-align:center;">Konekte sou Kont ou</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label>Nimewo telefòn</label>
+                    <input type="tel" id="login-phone" placeholder="Eg: 37000000" required>
+                </div>
+                <div class="form-group">
+                    <label>Modpas</label>
+                    <input type="password" id="login-pass" placeholder="Antre modpas ou" required>
+                </div>
+                <button type="submit" class="btn-submit">Konekte</button>
+            </form>
+        </div>
+
+        <!-- Enskripsyon -->
+        <div id="signup-box" class="auth-container">
+            <h2 style="color:#38bdf8; margin-bottom:1rem; text-align:center;">Kreye yon Kont</h2>
+            <form id="signup-form">
+                <div class="form-group">
+                    <label>Non konplè</label>
+                    <input type="text" id="signup-name" placeholder="Antre non ou" required>
+                </div>
+                <div class="form-group">
+                    <label>Nimewo telefòn</label>
+                    <input type="tel" id="signup-phone" placeholder="Eg: 37000000" required>
+                </div>
+                <div class="form-group">
+                    <label>Modpas</label>
+                    <input type="password" id="signup-pass" placeholder="Kreye modpas" required>
+                </div>
+                <button type="submit" class="btn-submit">Enskri</button>
+            </form>
+        </div>
+
+        <!-- Dashboard User -->
+        <div id="dashboard-box" class="dashboard">
+            <h2 style="color:#38bdf8; margin-bottom:0.5rem; text-align:center;">Bonnuit, <span id="user-name-txt">Itilizatè</span>!</h2>
+            <div class="balance-card">
+                <small style="color:#94a3b8">SOL DISPONIB</small>
+                <div class="amount" id="user-balance-txt">0 HTG</div>
+            </div>
+
+            <form id="withdraw-form">
+                <h3 style="color:#38bdf8; font-size:1rem; margin-bottom:0.5rem;">Mande yon Retrè</h3>
+                <div class="form-group">
+                    <label>Metòd Peman</label>
+                    <select id="withdrawal-method">
+                        <option value="MonCash">MonCash</option>
+                        <option value="Natcash">Natcash</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Montan (HTG)</label>
+                    <input type="number" id="withdraw-amt" placeholder="Eg: 500" min="100" required>
+                </div>
+                <div class="form-group">
+                    <label>Nimewo pou resevwa lajan an</label>
+                    <input type="tel" id="withdraw-phone" placeholder="Eg: 37123456" required>
+                </div>
+                <button type="submit" class="btn-submit">Soumèt Demann Retrè</button>
+            </form>
+
+            <div style="margin-top:1.5rem; border-top:1px solid #334155; padding-top:1rem;">
+                <h3 style="color:#38bdf8; font-size:1rem; margin-bottom:0.5rem;">Istorik Retrè Yo</h3>
+                <div id="user-history-list">
+                    <p style="color:#64748b; font-size:0.85rem;">Okenn retrè poko fèt.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Admin Panel (Wouj la) -->
+        <div id="admin-box" class="admin-panel">
+            <div class="admin-title">Espace Admin (Pano Kontwòl Sèkred)</div>
+            <div class="admin-btn-grid">
+                <button class="admin-btn" id="btn-valide-retre">Valide Retrè Yo</button>
+                <button class="admin-btn" id="btn-ajoute-video">Ajoute Videyo</button>
+                <button class="admin-btn" id="btn-jere-itilizate" style="flex: 1 1 80%;">Jere Itilizatè yo</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal Pop-ups pou Admin -->
+    <div id="modal-overlay" class="modal-overlay">
+        <div class="modal-body">
+            <span class="close-modal" id="close-modal">&times;</span>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 MoneyHTG. Tout dwa rezève.
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const homeSection = document.getElementById('home-section');
+            const loginBox = document.getElementById('login-box');
+            const signupBox = document.getElementById('signup-box');
+            const dashboardBox = document.getElementById('dashboard-box');
+            const adminBox = document.getElementById('admin-box');
+            const modalOverlay = document.getElementById('modal-overlay');
+            const modalContent = document.getElementById('modal-content');
+
+            function kacheTout() {
+                homeSection.style.display = 'none';
+                loginBox.style.display = 'none';
+                signupBox.style.display = 'none';
+                dashboardBox.style.display = 'none';
+                adminBox.style.display = 'none';
+            }
+
+            document.getElementById('nav-login-btn').onclick = function () {
+                kacheTout();
+                loginBox.style.display = 'block';
+            };
+
+            document.getElementById('nav-signup-btn').onclick = function () {
+                kacheTout();
+                signupBox.style.display = 'block';
+            };
+
+            document.getElementById('hero-signup-btn').onclick = function () {
+                kacheTout();
+                signupBox.style.display = 'block';
+            };
+
+            document.getElementById('logo-btn').onclick = function () {
+                kacheTout();
+                homeSection.style.display = 'block';
+            };
+
+            // Enskripsyon
+            document.getElementById('signup-form').onsubmit = function (e) {
+                e.preventDefault();
+                const name = document.getElementById('signup-name').value;
+                const phone = document.getElementById('signup-phone').value;
+                const pass = document.getElementById('signup-pass').value;
+
+                let users = JSON.parse(localStorage.getItem('htg_users')) || [];
+                if (users.find(u => u.phone === phone)) {
+                    alert("Nimewo sa a te deja enskri!");
+                    return;
+                }
+
+                users.push({ name, phone, pass, balance: 2500, history: [] });
+                localStorage.setItem('htg_users', JSON.stringify(users));
+
+                alert("Kont kreye ak siksè! Kounye a konekte.");
+                kacheTout();
+                loginBox.style.display = 'block';
+            };
+
+            // Koneksyon
+            document.getElementById('login-form').onsubmit = function (e) {
+                e.preventDefault();
+                const phone = document.getElementById('login-phone').value;
+                const pass = document.getElementById('login-pass').value;
+
+                if (phone === "37000000" && pass === "admin123") {
+                    kacheTout();
+                    adminBox.style.display = 'block';
+                    return;
+                }
+
+                let users = JSON.parse(localStorage.getItem('htg_users')) || [];
+                const user = users.find(u => u.phone === phone && u.pass === pass);
+
+                if (user) {
+                    kacheTout();
+                    document.getElementById('user-name-txt').innerText = user.name;
+                    document.getElementById('user-balance-txt').innerText = user.balance.toLocaleString() + " HTG";
+                    dashboardBox.style.display = 'block';
+                } else {
+                    alert("Nimewo oswa modpas enkorèk!");
+                }
+            };
+
+            // Modal Controls
+            document.getElementById('close-modal').onclick = function() {
+                modalOverlay.style.display = 'none';
+            };
+
+            // 1. Bouton Valide Retrè Yo
+            document.getElementById('btn-valide-retre').onclick = function() {
+                let users = JSON.parse(localStorage.getItem('htg_users')) || [];
+                let html = '<h3 style="color:#38bdf8; margin-bottom:1rem;">Demann RetrèYo</h3>';
+                let hasRequests = false;
+
+                users.forEach(u => {
+                    if (u.history) {
+                        u.history.forEach(item => {
+                            if (item.status === "An atant") {
+                                hasRequests = true;
+                                html += `
+                                    <div class="admin-item">
+                                        <div>
+                                            <strong>${u.name}</strong> - ${item.amount} HTG (${item.method})<br>
+                                            <small style="color:#94a3b8">Tel: ${item.phone}</small>
+                                        </div>
+                                        <button class="btn-action-small" onclick="valideDemann('${u.phone}', ${item.id})">Valide</button>
+                                    </div>
+                                `;
+                            }
+                        });
+                    }
+                });
+
+                if (!hasRequests) {
+                    html += '<p style="color:#94a3b8;">Pa gen okenn demann an atant.</p>';
+                }
+
+                modalContent.innerHTML = html;
+                modalOverlay.style.display = 'flex';
+            };
+
+            // 2. Bouton Ajoute Videyo
+            document.getElementById('btn-ajoute-video').onclick = function() {
+                modalContent.innerHTML = `
+                    <h3 style="color:#38bdf8; margin-bottom:1rem;">Ajoute yon Videyo</h3>
+                    <form id="form-add-video">
+                        <div class="form-group">
+                            <label>Tit Videyo</label>
+                            <input type="text" id="v-title" placeholder="Eg: Kijan pou kontwole kont lan" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Lyen YouTube</label>
+                            <input type="text" id="v-url" placeholder="Eg: https://youtube.com/..." required>
+                        </div>
+                        <button type="submit" class="btn-submit">Enregistre Videyo</button>
+                    </form>
+                `;
+                modalOverlay.style.display = 'flex';
+
+                document.getElementById('form-add-video').onsubmit = function(e) {
+                    e.preventDefault();
+                    alert("Videyo a ajoute ak siksè!");
+                    modalOverlay.style.display = 'none';
+                };
+            };
+
+            // 3. Bouton Jere Itilizatè yo
+            document.getElementById('btn-jere-itilizate').onclick = function() {
+                let users = JSON.parse(localStorage.getItem('htg_users')) || [];
+                let html = '<h3 style="color:#38bdf8; margin-bottom:1rem;">Lis Tout Itilizatè Yo</h3>';
+
+                if (users.length === 0) {
+                    html += '<p style="color:#94a3b8;">Pa gen itilizatè enskri poko.</p>';
+                } else {
+                    users.forEach(u => {
+                        html += `
+                            <div class="admin-item">
+                                <div>
+                                    <strong>${u.name}</strong> (${u.phone})<br>
+                                    <small style="color:#38bdf8">Sol: ${u.balance.toLocaleString()} HTG</small>
+                                </div>
+                            </div>
+                        `;
+                    });
+                }
+
+                modalContent.innerHTML = html;
+                modalOverlay.style.display = 'flex';
+            };
+        });
+
+        function valideDemann(userPhone, reqId) {
+            let users = JSON.parse(localStorage.getItem('htg_users')) || [];
+            const userIdx = users.findIndex(u => u.phone === userPhone);
+
+            if (userIdx !== -1 && users[userIdx].history) {
+                const itemIdx = users[userIdx].history.findIndex(i => i.id === reqId);
+                if (itemIdx !== -1) {
+                    users[userIdx].history[itemIdx].status = "Valide";
+                    localStorage.setItem('htg_users', JSON.stringify(users));
+                    alert("Demann sa a valide ak siksè!");
+                    document.getElementById('modal-overlay').style.display = 'none';
+                }
+            }
+        }
+    </script>
+</body>
+</html>
